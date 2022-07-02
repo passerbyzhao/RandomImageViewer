@@ -23,8 +23,7 @@ class PathHolder:
         if self._id == -1:
             raise Exception('PathHolder列表为空')
         if self._id == 1:
-            self._id = len(self._path_list)
-            path = self._path_list[self._id-1]
+            path = self._path_list[0]
             return path
         else:
             self._id -= 1
@@ -41,6 +40,13 @@ class PathHolder:
             self._id += 1
             path = self._path_list[self._id - 1]
             return path
+
+    def get_path(self, id):
+        return self._path_list[id]
+
+    @property
+    def id(self):
+        return self._id
 
 
 if __name__ == '__main__':
