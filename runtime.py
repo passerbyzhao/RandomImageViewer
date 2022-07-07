@@ -1,5 +1,6 @@
 import time
 
+
 def runtime(func):
     def _warp(*args, **kwargs):
         start_time = time.time()
@@ -8,6 +9,7 @@ def runtime(func):
         print('耗时%.6fs'%running_time)
         return result
     return _warp
+
 
 def cruntime(func):
     def _warp(self, *args, **kwargs):
