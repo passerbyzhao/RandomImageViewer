@@ -44,7 +44,9 @@
 
 使用MongoDB数据库保存文件树。相比实时模式只需要生成一次文件树，对于包含大量图像的文件夹来说省去了每次启动程序等待文件树生成的时间。
 通过使用不同的数据库表还可以快速更改目标文件树。  
+
 使用数据库模式需要安装pymongo。具体操作请看下文[-1.使用MongoDB](#-1.使用MongoDB)
+
 
 
 ## 2.快捷键
@@ -94,6 +96,7 @@
 > 效果：  
 > <img alt="window" src="https://github.com/passerbyzhao/RandomImageViewer/blob/318c99f711c641b7176f011cc3a69db0f5eb520c/img/window.png" width=889 height=555.5/>
 
+
 ## 5.高级设置
 - #### 屏幕尺寸
 
@@ -137,14 +140,12 @@ debug模式会输出每张图片的地址。
 - ~~在某些版本下会有白边（我只试了matplotlib 2.0.2），我也没定位到bug，也不一定会修。~~
 
 
-
 # 使用源码
 
 ## 1.依 赖
 [pillow](https://pillow.readthedocs.io/en/stable/installation.html)  
 [matplotlib](https://matplotlib.org/stable/)  
 [pymongo](https://github.com/mongodb/mongo-python-driver) （可选 不用数据库模式可以不装）  
-
 
 ## 2.可用参数
 
@@ -162,7 +163,7 @@ debug模式会输出每张图片的地址。
 `--initialize` 调用数据库初始化方法 布尔值 默认为`False`  
 `--update` 调用数据库更新方法 布尔值 默认为`False`   
 `--clear` 调用删除方法 布尔值 默认为`False`
-<font color=red>慎用！</font>
+<font color=red> 慎用！ </font>
 
 高级设置  
 `--screensize` 指定窗口大小 设置请看下文  
@@ -198,6 +199,5 @@ debug模式的参数需要通过`main.py`中指定。debug模式会输出每张�
 数据库通过`pymongo`实现。  
 随机通过`random.randint`结合列表/`find_one`方法的`skip`参数实现。  
 图片通过`PIL`读取，缓存通过`Thread`实现，显示通过`matplotlib`实现。按键通过`mpl_connect`实现。
-
 
 ###### <font color=Black>Random Image Viewer v1.0</font>
