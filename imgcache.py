@@ -35,7 +35,11 @@ def next_image_func(path_holder, debug=False):
     with condition:
         ImageID += 1
         if ImageID - 1 < FirstID:   # 如果缓存被删除
-            path = path_holder.get_path(ImageID)
+            try:
+                path = path_holder.get_path(ImageID)
+            except IndexError:
+                path = path_holder.next_path()
+                MaxID = max(MaxID, ImageID)
             img = Image.open(path)
         else:
             img = ImageList[ImageID - 1]
@@ -45,7 +49,7 @@ def next_image_func(path_holder, debug=False):
         # print(ImageID)
         # print('取得{}号图片'.format(ImageID))
         condition.notify()
-    return img
+    return img, path
 
 
 def previous_image(path_holder):
@@ -63,7 +67,7 @@ def previous_image(path_holder):
         else:
             img = ImageList[0]
         # print(ImageID)
-        return img
+        return img, path
     else:
         ImageID -= 1
         if ImageID - 1 < FirstID:   # 如果缓存被删除
@@ -72,7 +76,7 @@ def previous_image(path_holder):
         else:
             img = ImageList[ImageID - 1]
         # print(ImageID)
-        return img
+        return img, path
 
 
 class list_filler(Thread):
@@ -93,7 +97,11 @@ class list_filler(Thread):
                 while len(ImageList)-MaxID < MAXCACHE:  # 缓存至MAXCACHE
                     path = self.PathHolder.next_path()
                     img = Image.open(path)
+
+
                     img.load()
+
+
                     ImageList.append(img)
                 if len(ImageList) > CLEARCACHE:     # 如果缓存区超过最大大小 删除最早的缓存
                     while len(ImageList)-FirstID > CLEARCACHE:

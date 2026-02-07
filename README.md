@@ -15,6 +15,7 @@
 
 
 # 程序下载
+
 戳[这里](https://github.com/passerbyzhao/RandomImageViewer/releases)
 
 
@@ -50,10 +51,14 @@
 
 
 ## 2.快捷键
-`esc ctrl+q q` 
-```diff
-+ 关闭图片窗口 退出程序
-```  
+
+### 2.1 GUI快捷键
+`enter(回车键)` 开始图片浏览（相当于点击开始）  
+`shift+enter`或`ctrl+enter` 开始浏览LIKES数据库表（相当于点击喜爱列表）（仅限数据库模式）  
+
+### 2.2 浏览中快捷键
+
+`esc ctrl+q q` 关闭图片窗口 退出程序  
 `f ctrl+f` 全屏/窗口切换  
 `方向键右(->)` 下一张图片  
 `方向键左(<-)` 上一张图片  
@@ -61,6 +66,9 @@
 `>(。句号)` 逆时针旋转90度  
 `enter(回车键)` 开始/暂停计时切图  
 `鼠标滚轮` 上一张/下一张图片  
+`ctrl+s` 将本次运行种子保存到程序目录下的‘SavedSeed.txt’文件内  
+`l` 将当前图片路径储存到LIKES数据库表内（仅限数据库模式）  
+`crtl+l`  将当前图片路径从LIKES数据库表内删除（仅限数据库模式）
 
 除了这些，还支持matplotlib的快捷键。如果有需要（缩放什么的）可以
 [去看看](https://matplotlib.org/stable/users/explain/interactive.html#key-event-handling) 。
@@ -135,10 +143,11 @@ debug模式会输出每张图片的地址。
 - 暂停计时切图的时候没有提示，你可能不清楚当前计时是运行还是暂停的状态。
 - 暂停计时时计时器其实还在走，如果等待时间超过设定值，在取消暂停后会立刻切换到下一张图片。
 - <font color=red>`clear`参数慎用！会删除当前配置的数据库表！</font>
-- 运行的时候会切换不了窗口。这是个bug，得改。
 - 加载大图片的时候会费点劲。
 - ~~在某些版本下会有白边（我只试了matplotlib 2.0.2），我也没定位到bug，也不一定会修。~~
-
+- `shift+enter`和`ctrl+enter`在实时模式下依旧可用，如果没装MongoDB会导致程序报错。
+- 请不要给数据库表起名为`__new`，可能会导致未知bug。
+- GUI未经过完整测试，可能存在未知bug，欢迎反馈。
 
 # 使用源码
 
@@ -147,7 +156,11 @@ debug模式会输出每张图片的地址。
 [matplotlib](https://matplotlib.org/stable/)  
 [pymongo](https://github.com/mongodb/mongo-python-driver) （可选 不用数据库模式可以不装）  
 
-## 2.可用参数
+## 2. 使用GUI请用`main_GUI.py`
+
+GUI模式下的设定可以通过`config.ini`调整并保存，或者为什么不直接在GUI里操作呢 :-)
+
+### 2.1 使用`main.py`时的可用参数
 
 基础设置  
 `-m` `--mode` 文件树保存模式 可选`ontime`和`mongodb` 默认为`ontime`  
@@ -178,17 +191,22 @@ irrelevant
 ## 3.高级设置
 - #### 缓存 
 
-提前读取几张图片，在显示图片时可以少花点时间（但是好像影响了初始化时间？）。
+~~提前读取几张图片，在显示图片时可以少花点时间（但是好像影响了初始化时间？）。~~ 由于功能冲突暂时禁用了缓存功能，反正目前也没起什么作用。  
 ~~反正我每次也画不了几张~~  
 
-不建议自己修改，但是有需求可以去`imgcache.py`。
+~~不建议自己修改，但是有需求可以去`imgcache.py`。
 `INITCACHE`是初始化缓存大小，`MAXCACHE`每次更新后最多缓存数量，`CACHE`是启动更新的标志。
-`CLEARCACHE`是总缓存的大小。
+`CLEARCACHE`是总缓存的大小。~~
 
 - #### 添加支持图片格式
 
 理论上PIL能打开的图片都可以支持，但是我只添加了几个我认为比较常见的图片格式。
-添加新的图片格式需要修改`dirtree.py`中的`ImageType`，将想添加的文件后缀加到列表里。注意：对大小写敏感。
+添加新的图片格式需要修改`dirtree.py`中的`ImageType`，将想添加的文件后缀加到列表里。
+
+- #### 调整图片文件最小大小
+
+为了防止程序读取到错误图片崩溃，添加了文件大小校验。默认大小小于100b的文件不会读取。修改该变量可以到`dirtree.py`的`MINFILESIZE`。
+
 
 - #### debug模式
 使用debug模式需要通过`--configfile`关闭配置文件，即配置文件的debug比命令行参数的debug优先级高。

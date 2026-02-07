@@ -2,8 +2,7 @@ from os.path import exists, getsize
 from pathlib import Path
 
 
-ImageType = ('jpg', 'png', 'jpeg', 'bmp', 'tif', 'tga', 'eps', 'psd',
-             'JPG', 'PNG', 'JPEG', 'BMP', 'TIF', 'TGA', 'EPS', 'PSD')
+ImageType = ('jpg', 'png', 'jpeg', 'bmp', 'tif', 'tga', 'eps', 'psd',)
 MINFILESIZE = 100   # 最小文件大小 100B
 
 
@@ -40,13 +39,13 @@ class TreeBuilder:
             raise Exception('未指定图片目录，请将图片目录放到程序根目录下的\'目录.txt\'内。')
         for directory in _dir_list:     # 检查目录真实性
             if not exists(directory):
-                raise Exception('图片目录\'{}\'错误。一行只能放一个目录。'.format(directory))
+                raise Exception('图片目录\'{}\'错误。目录不存在或有一行有多个目录。'.format(directory))
         return _dir_list
 
     def _getall(self, path):
         if path.is_file():      # 如果是文件
             path = str(path)
-            if path.endswith(ImageType):    # 判断是不是图片
+            if path.lower().endswith(ImageType):    # 判断是不是图片
                 if getsize(path) > MINFILESIZE:     # 判断文件大小
                     self.tree.append(path)
         elif path.is_dir():     # 如果是目录 进行递归
@@ -90,13 +89,13 @@ class TreeBuilderElse:
             raise Exception('未指定图片目录')
         for directory in _dir_list:     # 检查目录真实性
             if not exists(directory):
-                raise Exception('图片目录\'{}\'错误。一行只能放一个目录。'.format(directory))
+                raise Exception('图片目录\'{}\'错误。目录不存在或有一行有多个目录。'.format(directory))
         return _dir_list
 
     def _getall(self, path):
         if path.is_file():      # 如果是文件
             path = str(path)
-            if path.endswith(ImageType):    # 判断是不是图片
+            if path.lower().endswith(ImageType):    # 判断是不是图片
                 if getsize(path) > MINFILESIZE:  # 判断文件大小
                     self.tree.append(path)
         elif path.is_dir():     # 如果是目录 进行递归
