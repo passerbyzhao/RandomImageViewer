@@ -110,7 +110,7 @@ def show_image(args):
             NEXT = True
         if event.key == 'l':    # 添加喜爱列表
             if args.mode == 'mongodb':
-                # LIKECOLLECTION.update_one({'path':IMGPATH}, {'$setOnInsert':{'path':IMGPATH}}, upsert=True)
+                LIKECOLLECTION.update_one({'path':IMGPATH}, {'$setOnInsert':{'path':IMGPATH}}, upsert=True)
                 print(f'Liked: {IMGPATH}')
             # print('l is pressed')
             NEXT = True
