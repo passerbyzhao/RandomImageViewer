@@ -68,7 +68,9 @@
 `鼠标滚轮` 上一张/下一张图片  
 `ctrl+s` 将本次运行种子保存到程序目录下的‘SavedSeed.txt’文件内  
 `l` 将当前图片路径储存到LIKES数据库表内（仅限数据库模式）  
-`crtl+l`  将当前图片路径从LIKES数据库表内删除（仅限数据库模式）
+`crtl+l`  将当前图片路径从LIKES数据库表内删除（仅限数据库模式）  
+`w` 将当前图片路径储存到WALLPAPERS数据库表内（仅限数据库模式）  
+`crtl+w`  将当前图片路径从WALLPAPERS数据库表内删除（仅限数据库模式）
 
 除了这些，还支持matplotlib的快捷键。如果有需要（缩放什么的）可以
 [去看看](https://matplotlib.org/stable/users/explain/interactive.html#key-event-handling) 。
@@ -145,7 +147,6 @@ debug模式会输出每张图片的地址。
 - <font color=red>`clear`参数慎用！会删除当前配置的数据库表！</font>
 - 加载大图片的时候会费点劲。
 - ~~在某些版本下会有白边（我只试了matplotlib 2.0.2），我也没定位到bug，也不一定会修。~~
-- `shift+enter`和`ctrl+enter`在实时模式下依旧可用，如果没装MongoDB会导致程序报错。
 - 请不要给数据库表起名为`__new`，可能会导致未知bug。
 - GUI未经过完整测试，可能存在未知bug，欢迎反馈。
 
