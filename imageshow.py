@@ -15,7 +15,7 @@ PAUSE = False   # 暂停
 IMG = ''    # 当前图片数据
 IMGPATH = ''    # 当前图片路径
 LIKECOLLECTION = ''
-
+WALLPAPERCOLLECTION = ''
 
 def show_image(args):
     # 图片缓冲相关 暂时停用
@@ -26,7 +26,7 @@ def show_image(args):
     #     imgcache = ImgCache()
     from imgwithoutcache import ImgCache
     imgcache = ImgCache()
-    global Timer, NEXT, IMG, PAUSE, IMGPATH, LIKECOLLECTION
+    global Timer, NEXT, IMG, PAUSE, IMGPATH, LIKECOLLECTION, WALLPAPERCOLLECTION
     random.seed(float(args.seed))
 
     # 配置随机路径生成器
@@ -43,6 +43,7 @@ def show_image(args):
         client = MongoClient(args.client)
         db = client[args.database]
         LIKECOLLECTION = db['LIKES']
+        WALLPAPERCOLLECTION = db['WALLPAPERS']
 
         mongodb_list = args.collection
         mongodb = MongoBuilder(client=args.client, db=args.database, collection=args.collection, Tree=Tree, target=target)
@@ -86,7 +87,7 @@ def show_image(args):
 
     # 按键动作
     def onkey(event):
-        global IMG, Timer, NEXT, PAUSE, IMGPATH
+        global IMG, Timer, NEXT, PAUSE, IMGPATH, LIKECOLLECTION, WALLPAPERCOLLECTION
         if event.key == 'right':
             IMG, IMGPATH = imgcache.next_image_func(pather, args.debug)
             Timer = time()
@@ -109,12 +110,26 @@ def show_image(args):
             NEXT = True
         if event.key == 'l':    # 添加喜爱列表
             if args.mode == 'mongodb':
-                LIKECOLLECTION.update_one({'path':IMGPATH}, {'$setOnInsert':{'path':IMGPATH}}, upsert=True)
+                # LIKECOLLECTION.update_one({'path':IMGPATH}, {'$setOnInsert':{'path':IMGPATH}}, upsert=True)
+                print(f'Liked: {IMGPATH}')
             # print('l is pressed')
             NEXT = True
         if event.key == 'ctrl+l':  # 删除喜爱列表
             if args.mode == 'mongodb':
                 LIKECOLLECTION.find_one_and_delete({'path':IMGPATH})
+                print(f'Unliked: {IMGPATH}')
+            # print('control+l is pressed')
+            NEXT = True
+        if event.key == 'w':    # 添加壁纸列表
+            if args.mode == 'mongodb':
+                WALLPAPERCOLLECTION.update_one({'path':IMGPATH}, {'$setOnInsert':{'path':IMGPATH}}, upsert=True)
+                print(f'Wallpaper added: {IMGPATH}')
+            # print('l is pressed')
+            NEXT = True
+        if event.key == 'ctrl+w':  # 删除壁纸列表
+            if args.mode == 'mongodb':
+                WALLPAPERCOLLECTION.find_one_and_delete({'path':IMGPATH})
+                print(f'Wallpaper removed: {IMGPATH}')
             # print('control+l is pressed')
             NEXT = True
         # if event.key == 'ctrl+right':   # 目录中的下一个文件
@@ -127,15 +142,34 @@ def show_image(args):
         #         pass
         #     NEXT = True
 
+    # 鼠标按键动作
+    def onbutton(event):
+        global NEXT, IMGPATH, LIKECOLLECTION, WALLPAPERCOLLECTION
+        # print(event.key)
+        if event.button == 9:  # 添加喜爱列表 鼠标前进键
+            if args.mode == 'mongodb':
+                LIKECOLLECTION.update_one({'path': IMGPATH}, {'$setOnInsert': {'path': IMGPATH}}, upsert=True)
+                print(f'Liked: {IMGPATH}')
+            # print('9 is pressed')
+            NEXT = True
+        if event.button == 8:  # 添加喜爱列表 鼠标后退键
+            if args.mode == 'mongodb':
+                WALLPAPERCOLLECTION.update_one({'path': IMGPATH}, {'$setOnInsert': {'path': IMGPATH}}, upsert=True)
+                print(f'Wallpaper added: {IMGPATH}')
+            # print('8 is pressed')
+            NEXT = True
+
     # 滚轮动作
     def scroll(event):
-        global IMG, Timer, NEXT
+        global IMG, Timer, NEXT, IMGPATH
         if event.button == 'down':
             IMG, IMGPATH = imgcache.next_image_func(pather, args.debug)
+            # print(f'Scrolling: {IMGPATH}')
             Timer = time()
             NEXT = True
         if event.button == 'up':
             IMG, IMGPATH = imgcache.previous_image(pather)
+            # print(f'Scrolling back: {IMGPATH}')
             Timer = time()
             NEXT = True
 
@@ -144,6 +178,7 @@ def show_image(args):
     plt.rcParams['keymap.quit'] = ['escape', 'q', 'ctrl+q']
     fig = plt.figure(num=42)
     fig.canvas.mpl_connect('key_press_event', onkey)
+    fig.canvas.mpl_connect('button_press_event', onbutton)
     fig.canvas.mpl_connect('scroll_event', scroll)
     fig.set_tight_layout('pad')
     fig.set_facecolor(args.background)

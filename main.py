@@ -17,7 +17,7 @@ def get_args_parser():
     parser.add_argument('-t', '--time', default=600, help='切换图片的时间间隔 单位是秒 默认600秒（10分钟）')
     parser.add_argument('--seed', default=time(), help='随机数生成器的种子')
     parser.add_argument('-b', '--background', default='k', help='设置背景颜色 默认为黑色')
-    parser.add_argument("-v", "--version", action='version', version='%(prog)sv2.0', help='输出版本号')
+    parser.add_argument("-v", "--version", action='version', version='%(prog)sv2.1', help='输出版本号')
     parser.add_argument('--screensize', default='fullscreen', help='指定窗口大小 默认为全屏 修改请用英文逗号分割宽高 宽在前 高在后')
     parser.add_argument('--client', default='mongodb://localhost:27017/', help='MongoDB地址 默认为本地')
     parser.add_argument('--database', default='RandomImage', help='MongoDB数据库名称 默认为RandomImage')

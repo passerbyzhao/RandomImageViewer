@@ -8,7 +8,7 @@ from GUI import GUI, Message
 
 warnings.filterwarnings("ignore", ".*GUI is implemented.*")     # matplotlib2.0.2会跳出警告
 
-VERSION = 'v2.0'
+VERSION = 'v2.1'
 
 
 if __name__ == '__main__':

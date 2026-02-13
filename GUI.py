@@ -402,13 +402,16 @@ class GUI(ttk.Frame):
         self.args.configfile = True if self.var_config.get() else False
 
     def like_start(self):
-        self.get_settings()
-        self.args.collection = ['LIKES']
-        self.args.initialize = False
-        self.args.update = False
-        self.args.clear = False
-        self.end_state = True
-        self.Window.destroy()
+        if self.var_mode.get() == 'mongodb':
+            self.get_settings()
+            self.args.collection = ['LIKES']
+            self.args.initialize = False
+            self.args.update = False
+            self.args.clear = False
+            self.end_state = True
+            self.Window.destroy()
+        else:
+            pass
 
     def end(self):
         self.get_settings()
